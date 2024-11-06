@@ -89,26 +89,71 @@ export class MyCalculatorComponent {
 
   public removeGroup(index : number)  {
     this.CalcGroups.splice(index, 1);
+
+    if (this.CalcGroups.length > 1) {
+      if (index < this.operationsBetweenGroups.length) {
+        this.operationsBetweenGroups.splice(index, 1);
+      } else {
+        this.operationsBetweenGroups.pop();
+      }
+    } else {
+      this.operationsBetweenGroups = [];
+    }
   }
 
- // public Calc(){
- //      switch (this.operation){
- //        case "+":
- //          this.result = this.first + this.second;
- //          break
- //        case "-":
- //          this.result = this.first - this.second;
- //          break
- //        case "*":
- //          this.result = this.first * this.second;
- //          break
- //        case "/":
- //          this.result = this.first / this.second;
- //          break
- //        default:
- //          this.result = undefined;
- //          break
- //      }
- // }
+  public calcGroup(){
+    let result = 0;
+
+    let tempHistory: string[] = [];
+
+    this.CalcGroups.forEach((group,i) => {
+      if(i === 0){
+        result = this.Calc(this.calcValueWithModify(group.first), this.calcValueWithModify(group.second),group.operation)
+      }else{
+       let tempResult = this.Calc(this.calcValueWithModify(group.first), this.calcValueWithModify(group.second),group.operation)
+        result = this.Calc(result, tempResult, this.operationsBetweenGroups[i-1])
+      }
+      tempHistory.push(`(
+        ${group.first.modificator !== CalcModifiers.none ?
+        group.first.modificator :""})
+          ${group.first.value}
+          ${group.operation}
+          ${group.second.modificator !== CalcModifiers.none ?
+        group.second.modificator :""}
+          ${group.second.value}
+          `);
+
+      tempHistory.push(`= ${result}`)
+      this.history.push(tempHistory.join(" "))
+
+      this.result = result;
+    })
+  }
+
+  public calcValueWithModify(value: CalcVar): number{
+    switch (value.modificator){
+      case CalcModifiers.none:
+        return value.value
+      case CalcModifiers.cos:
+        return Math.cos(value.value)
+      case CalcModifiers.sin:
+        return Math.sin(value.value)
+      case CalcModifiers.square:
+        return Math.pow(value.value,2)
+    }
+  }
+
+ public Calc(first: number , second: number , operation: CalcOperations): number{
+      switch (operation){
+        case CalcOperations.plus:
+         return  first + second;
+        case CalcOperations.minus:
+          return  first - second;
+        case CalcOperations.multiply:
+          return  first * second;
+        case CalcOperations.divide:
+          return  first / second;
+      }
+ }
   protected readonly CalcOperations = CalcOperations;
 }

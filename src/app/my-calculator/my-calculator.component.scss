@@ -1,0 +1,11 @@
+.calculator{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.calcGroupWrap{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}

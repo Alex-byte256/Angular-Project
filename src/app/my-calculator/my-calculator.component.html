@@ -1,29 +1,43 @@
 <div class="calculator">
 
   <ng-container *ngFor="let group of CalcGroups; let i = index">
-    <select [(ngModel)]="group.first.modificator">
-      <option [value]="modificator.value"  *ngFor="let modificator of calcModifiers | keyvalue">{{modificator.value}}</option>
-    </select>
-    <input type="number" class="calculator__input" [(ngModel)]="group.first.value">
 
-    <select [(ngModel)]="group.operation">
-      <option [value]="operation.value"  *ngFor="let operation of CalcOperations | keyvalue">{{operation.value}}</option>
-    </select>
+    <div class="calcGroupWrap">
 
-    <select [(ngModel)]="group.second.modificator">
-      <option [value]="modificator.value"  *ngFor="let modificator of calcModifiers | keyvalue">{{modificator.value}}</option>
-    </select>
-    <input type="number" class="calculator__input" [(ngModel)]="group.second.value">
+      <div>
+        <select [(ngModel)]="group.first.modificator">
+          <option [value]="modificator.value"  *ngFor="let modificator of calcModifiers | keyvalue">{{modificator.value}}</option>
+        </select>
+        <input type="number" class="calculator__input" [(ngModel)]="group.first.value">
+      </div>
 
-    <select [(ngModel)]="operationsBetweenGroups[i]" *ngIf="operationsBetweenGroups.length > i">
-      <option [value]="operation.value"  *ngFor="let operation of CalcOperations | keyvalue">{{operation.value}}</option>
-    </select>
-    <button (click)="removeGroup(i)" *ngIf="i !== 0">Видалити групу</button>
+      <select [(ngModel)]="group.operation">
+        <option [value]="operation.value"  *ngFor="let operation of CalcOperations | keyvalue">{{operation.value}}</option>
+      </select>
+
+      <div>
+        <select [(ngModel)]="group.second.modificator">
+          <option [value]="modificator.value"  *ngFor="let modificator of calcModifiers | keyvalue">{{modificator.value}}</option>
+        </select>
+        <input type="number" class="calculator__input" [(ngModel)]="group.second.value">
+      </div>
+
+      <select [(ngModel)]="operationsBetweenGroups[i]" *ngIf="operationsBetweenGroups.length > i">
+        <option [value]="operation.value"  *ngFor="let operation of CalcOperations | keyvalue">{{operation.value}}</option>
+      </select>
+      <button (click)="removeGroup(i)" *ngIf="i !== 0">Видалити групу</button>
+    </div>
+
   </ng-container>
-  <span class="calculator__result">{{ result ? result : "Натисніть порахувати!" }}</span>
+  <span class="calculator__result">{{result ? result : "Натисніть порахувати"}}</span>
 
   <div>
-    <button>Порахувати</button>
+    <span>Історія операцій:</span>
+    <span *ngFor="let obj of history; let i = index">{{i + 1}} {{obj}}</span>
+  </div>
+
+  <div>
+    <button (click)="calcGroup()">Порахувати</button>
     <button (click)="addGroup()">Додати групу</button>
   </div>
 
